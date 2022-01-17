@@ -2,6 +2,7 @@
 
 
 import { Router } from "express";
+import StaticRoute from './static/static.route'
 
 class ApiRoute {
   private static instance = new ApiRoute()
@@ -15,7 +16,7 @@ class ApiRoute {
   
     route() {
       const router = Router();
-      // router.use('/auth', AuthRoute.route())
+      router.use('/static', StaticRoute.route())
      
       return router
     }

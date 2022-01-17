@@ -1,19 +1,18 @@
 'use strict'
-import express from 'express';
+import express,{ Express } from 'express';
 import Config from 'config'
 import fs from 'fs'
 import cors from 'cors'
 
-const app = express();
-const port = 3000;
+const app:Express = express();
+const port = 4000;
 
-import apiRoute from 'routes/api/api.route';
-
-
+import ApiRoute from './routes/api/api.route';
+import MariaDB from './integration/database/mariaDB/index';
 (async () => {
   try {
     const appConf = JSON.parse(fs.readFileSync('config/app.config.json', 'utf8'))
-
+    MariaDB.createConnection(appConf)
     app.use(cors({
         origin: '*', // ["http://localhost:3001"]
         // credentials: true,
@@ -28,11 +27,15 @@ import apiRoute from 'routes/api/api.route';
         ],
         optionsSuccessStatus: 204
       }))
+
+      app.use('/api', ApiRoute.route())
+
     app.listen(port,() =>{
         console.log(` server on port ${port}`)
     })
     } catch (err) {
-      process.exit(1)
+      console.log(err)
+      process.exit(0)
     }
   })();
   
